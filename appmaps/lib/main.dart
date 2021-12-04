@@ -36,10 +36,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Google Office Locations'),
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.purpleAccent,
         ),
         body: GoogleMap(
           onMapCreated: _onMapCreated,
