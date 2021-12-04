@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -14,7 +15,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="$FLUTTER_BASE_HREF">
+  <base href="/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -25,10 +26,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="appmaps">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBpdHWQb91KAp_wtuq-l-Rrch-jSH1Cz0"></script>
   <title>appmaps</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
@@ -98,4 +100,5 @@
     }
   </script>
 </body>
+
 </html>
