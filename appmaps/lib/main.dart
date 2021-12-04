@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'src/locations.dart' as locations;
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -11,28 +16,75 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late GoogleMapController mapController;
+  late final BitmapDescriptor pinLocationIcon;
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  @override
+  void initState() {
+    super.initState();
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/icon_marker.png')
+        .then((onValue) {
+      pinLocationIcon = onValue;
+    });
+  }
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+  final Map<String, Marker> _markers = {};
+
+  Future<void> _onMapCreated(
+      GoogleMapController controller, LatLng pinPosition) async {
+    final googleOffices = await locations.getGoogleOffices();
+    setState(() {
+      _markers.clear();
+
+      for (final office in googleOffices.offices) {
+        final marker = Marker(
+          markerId: MarkerId(office.name),
+          position: LatLng(office.lat, office.lng),
+          icon: pinLocationIcon,
+          infoWindow: InfoWindow(
+            title: office.name,
+            snippet: office.address,
+          ),
+        );
+        _markers[office.name] = marker;
+      }
+      // final marker = Marker(
+      //   markerId: MarkerId('office.name'),
+      //   position: pinPosition,
+      //   icon: pinLocationIcon,
+      //   infoWindow: InfoWindow(
+      //     title: 'office.name',
+      //     snippet: 'office.address',
+      //   ),
+      // );
+      // _markers.add(marker);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    LatLng pinPosition = const LatLng(37.3797536, -122.1017334);
+
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Maps Sample App'),
-          backgroundColor: Colors.green[700],
+          title: const Text('Google Office Locations'),
+          backgroundColor: Colors.purpleAccent,
         ),
         body: GoogleMap(
-          onMapCreated: _onMapCreated,
+          myLocationEnabled: true,
+          onMapCreated: (_) {
+            _onMapCreated(_, pinPosition);
+          },
           initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 11.0,
+            //target: LatLng(0, 0),
+            target: pinPosition,
+            // bearing: 30,
+            zoom: 2,
           ),
+          markers: _markers.values.toSet(),
         ),
       ),
     );
